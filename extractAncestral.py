@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import sys, re, os
 from optparse import OptionParser
@@ -37,7 +37,10 @@ def parse_rec(fh):
             rec["seq"] = rec["seq"] + "".join(line_parts[0:-1])
         elif line_parts[0] == "ID":
             rec["id"] = line_parts[1]
-            rec["length"] = line_parts[5]
+            rec["length"] = line_parts[-2]
+        elif line_parts[0] == "NM":
+            # Catches proper ID from RepBase libraries
+            rec["id"] = line_parts[1]
         elif line_parts[0] == "CC":
             if line_parts[1] == "Type:":
                 if len(line_parts) > 2:
@@ -80,7 +83,7 @@ if __name__ == "__main__":
         if opt.seqs != "":
             use_item = False
             if rec["id"] in seqs:
-                use_item = True
+                use_item = True            
         else:
             use_item = True
         if use_item:
